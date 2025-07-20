@@ -5,7 +5,7 @@ import json
 from telegram import Update, InputFile, Bot
 from telegram.ext import (
     Application, CommandHandler, MessageHandler,
-    ContextTypes, ConversationHandler, Dispatcher, filters
+    ContextTypes, ConversationHandler, filters
 )
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
@@ -33,7 +33,6 @@ user_photo_counts = {}
 app = FastAPI()
 bot = Bot(token=BOT_TOKEN)
 application = Application.builder().token(BOT_TOKEN).build()
-dispatcher: Dispatcher = application.dispatcher
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
@@ -122,8 +121,8 @@ conv_handler = ConversationHandler(
     fallbacks=[CommandHandler("start", start)]
 )
 
-dispatcher.add_handler(CommandHandler("start", start))
-dispatcher.add_handler(conv_handler)
+application.add_handler(CommandHandler("start", start))
+application.add_handler(conv_handler)
 
 @app.post(f"/{BOT_TOKEN}")
 async def webhook(request: Request):
