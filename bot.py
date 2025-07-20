@@ -21,9 +21,7 @@ TEXTS_FOLDER_ID = os.environ["READ_FOLDER_ID"]
 GOOGLE_CREDENTIALS = json.loads(os.environ["GOOGLE_CREDENTIALS"])
 
 SCOPES = ['https://www.googleapis.com/auth/drive.readonly']
-credentials = service_account.Credentials.from_service_account_info(
-    GOOGLE_CREDENTIALS, scopes=SCOPES
-)
+credentials = service_account.Credentials.from_service_account_info(GOOGLE_CREDENTIALS, scopes=SCOPES)
 drive_service = build('drive', 'v3', credentials=credentials)
 
 WAITING_PHOTO = 1
@@ -37,18 +35,15 @@ application = Application.builder().token(BOT_TOKEN).build()
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         f""" 👋 Здравствуйте, {update.effective_user.first_name}!
-Я рада, что вы согласились поучаствовать в затее по переписыванию Википедии :) Это академический проект, задача которого — создать тренировочный датасет для kraken-модели, которая будет транскрибировать рукописи на современном русском.
-
-Бот не собирает персональные данные, не запоминает ваш ник и номер телефона.
+Я рада, что вы согласились поучаствовать в затее по переписыванию Википедии :)
 
 Вот что теперь нужно сделать:
 1️⃣ Нажмите /gettext . Вы получите случайный текст.
-
-✍️ Перепишите этот текст *или его фрагмент*.
-
+✍️ Перепишите его от руки.
+📸 Сфотографируйте и отправьте.
 ✅ Дождитесь подтверждения загрузки.
 
-Приступим? Нажимайте /gettext
+Нажмите /gettext чтобы начать.
 """
     )
 
@@ -82,7 +77,7 @@ async def get_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_photo_counts[user_id] = 0
 
     await update.message.reply_text(f"{text}\n\nВаш код: {code}")
-    await update.message.reply_text("Теперь отправьте фото написанного от руки текста (JPG или PNG).")
+    await update.message.reply_text("Теперь отправьте фото написанного текста (JPG или PNG).")
     return WAITING_PHOTO
 
 async def receive_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
