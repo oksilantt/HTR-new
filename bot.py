@@ -2,7 +2,7 @@ import os
 import random
 import io
 import json
-from telegram import Update, InputFile, Bot
+from telegram import Update, InputFile
 from telegram.ext import (
     Application, CommandHandler, MessageHandler,
     ContextTypes, ConversationHandler, filters
@@ -29,7 +29,6 @@ user_codes = {}
 user_photo_counts = {}
 
 app = FastAPI()
-bot = Bot(token=BOT_TOKEN)
 application = Application.builder().token(BOT_TOKEN).build()
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -122,6 +121,6 @@ application.add_handler(conv_handler)
 @app.post(f"/{BOT_TOKEN}")
 async def webhook(request: Request):
     data = await request.json()
-    update = Update.de_json(data, bot)
+    update = Update.de_json(data, application.bot)
     await application.update_queue.put(update)
     return {"ok": True}
